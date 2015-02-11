@@ -1,14 +1,17 @@
-class Triangle
-  EQUILATERAL = 1 # 正三角形
-  ISOSCELES = 2 # 二等辺三角形
-  SCALENE = 3 # 不等辺三角形
-  NOT_TRIANGLE = 4 # 三角形でない
+# coding: utf-8
 
-  def self.detect_shape_for(edge1, edge2, edge3)
-    if Triangle.is_triangle(edge1, edge2, edge3)
-      if Triangle.is_equilateral(edge1, edge2, edge3)
+class Triangle
+  EQUILATERAL = "正三角形ですね！"
+  ISOSCELES = "二等辺三角形ですね！"
+  SCALENE = "不等辺三角形ですね！"
+  NOT_TRIANGLE = "三角形じゃないです＞＜"
+
+  def self.detect_shape_for(argv)
+    edges = normalize_arguments(argv)
+    if Triangle.is_triangle(edges)
+      if Triangle.is_equilateral(edges)
         EQUILATERAL
-      elsif Triangle.is_isosceles(edge1, edge2, edge3)
+      elsif Triangle.is_isosceles(edges)
         ISOSCELES
       else
         SCALENE
@@ -18,27 +21,55 @@ class Triangle
     end
   end
 
-  def self.is_triangle(edge1, edge2, edge3)
-    if (edge1 < (edge2 + edge3)) && (edge2 < (edge1 + edge3)) && (edge3 < (edge1 + edge2))
+  def self.is_triangle(edges)
+    return false if edges == nil
+    if (edges[0] < (edges[1] + edges[2])) &&
+            (edges[1] < (edges[0] + edges[2])) &&
+            (edges[2] < (edges[0] + edges[1]))
       true
     else
       false
     end
   end
 
-  def self.is_equilateral(edge1, edge2, edge3)
-    if (edge1 == edge2) && (edge2 == edge3)
+  def self.is_equilateral(edges)
+    if (edges[0] == edges[1]) && (edges[1] == edges[2])
       true
     else
       false
     end
   end
 
-  def self.is_isosceles(edge1, edge2, edge3)
-    if (edge1 == edge2) || (edge2 == edge3) || (edge3 == edge1)
+  def self.is_isosceles(edges)
+    if (edges[0] == edges[1]) || (edges[1] == edges[2]) || (edges[2] == edges[0])
       true
     else
       false
     end
+  end
+
+  def self.integer_string?(str)
+    Integer(str)
+    true
+  rescue ArgumentError
+    false
+  end
+
+  def self.valid_arguments?(argv)
+    return false unless argv.length == 3
+    argv.each do |a|
+      return false unless integer_string?(a.delete(','))
+    end
+    true
+  end
+
+  def self.normalize_arguments(argv)
+    return nil unless valid_arguments?(argv)
+    argv.map{|a| a.delete(',')}
   end
 end
+
+if __FILE__ == $0
+  puts Triangle.detect_shape_for(ARGV)
+end
+
