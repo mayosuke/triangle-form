@@ -7,7 +7,7 @@ class Triangle
   NOT_TRIANGLE = "三角形じゃないです＞＜"
 
   def self.detect_shape_for(argv)
-    edges = normalize_arguments(argv)
+    edges = get_edges_from_arguments(argv)
     if Triangle.is_triangle(edges)
       if Triangle.is_equilateral(edges)
         EQUILATERAL
@@ -48,24 +48,11 @@ class Triangle
     end
   end
 
-  def self.integer_string?(str)
-    Integer(str)
-    true
+  def self.get_edges_from_arguments(argv)
+    return nil unless argv.length == 3
+    argv.map{|a| Integer(a.delete(','))}
   rescue ArgumentError
-    false
-  end
-
-  def self.valid_arguments?(argv)
-    return false unless argv.length == 3
-    argv.each do |a|
-      return false unless integer_string?(a.delete(','))
-    end
-    true
-  end
-
-  def self.normalize_arguments(argv)
-    return nil unless valid_arguments?(argv)
-    argv.map{|a| a.delete(',')}
+    nil
   end
 end
 
