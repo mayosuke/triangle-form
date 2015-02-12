@@ -50,7 +50,7 @@ class Triangle
 
   def self.get_edges_from_arguments(argv)
     return nil unless argv.length == 3
-    argv.map{|a| Integer(a.delete(','))}
+    argv.map{|a| Float(a.delete(','))}
   rescue ArgumentError
     nil
   end
